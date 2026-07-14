@@ -1,6 +1,6 @@
 # render
 
-[![Version](https://img.shields.io/badge/version-v0.3.0-brightgreen.svg)](https://github.com/VirtusLab/render/releases/tag/v0.3.0)
+[![Version](https://img.shields.io/badge/version-v0.4.0-brightgreen.svg)](https://github.com/VirtusLab/render/releases/tag/v0.4.0)
 [![Travis CI](https://img.shields.io/travis/VirtusLab/render.svg)](https://travis-ci.org/VirtusLab/render)
 [![Github All Releases](https://img.shields.io/github/downloads/VirtusLab/render/total.svg)](https://github.com/VirtusLab/render/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/VirtusLab/render "Go Report Card")](https://goreportcard.com/report/github.com/VirtusLab/render)
@@ -53,7 +53,7 @@ USAGE:
    render [global options] command [command options] [arguments...]
 
 VERSION:
-   v0.3.0
+   v0.4.0
 
 AUTHOR:
    VirtusLab
@@ -157,13 +157,15 @@ All syntax and functions:
 See also [examples](examples) and a more 
 [detailed documentation](https://godoc.org/github.com/VirtusLab/render/renderer#Renderer.ExtraFunctions).
 
-Cloud KMS (AWS, Amazon, Google) based cryptography functions form [`crypt`](https://github.com/VirtusLab/crypt):
+Cloud KMS (AWS, Azure, GCP, and OCI) based cryptography functions from [`crypt`](https://github.com/VirtusLab/crypt):
 - `encryptAWS` - encrypts data using AWS KMS, for best results use with `gzip` and `b64enc`
 - `decryptAWS` - decrypts data using AWS KMS, for best results use with `ungzip` and `b64dec`
 - `encryptGCP` - encrypts data using GCP KMS, for best results use with `gzip` and `b64enc`
 - `decryptGCP` - decrypts data using GCP KMS, for best results use with `ungzip` and `b64dec`
 - `encryptAzure` - encrypts data using Azure Key Vault, for best results use with `gzip` and `b64enc`
 - `decryptAzure` - decrypts data using Azure Key Vault, for best results use with `ungzip` and `b64dec`
+- `encryptOCI` - encrypts data using OCI KMS, for best results use with `gzip` and `b64enc`
+- `decryptOCI` - decrypts data using OCI KMS, for best results use with `ungzip` and `b64dec`; the key OCID and crypto endpoint may be empty when the ciphertext contains the `crypt` metadata header
 
 #### Helm compatibility
 
@@ -196,11 +198,18 @@ Before any big pull request please consult the maintainers to ensure a common di
 
 ## Development
 
-    git clone git@github.com:VirtusLab/render.git
+The modernized `render` and `crypt` forks are developed as sibling checkouts. The relative replacement in `go.mod` lets normal Go commands use the local `crypt` module without a `go.work` file:
+
+    git clone git@github.com:je2ryw/crypt.git
+    git clone git@github.com:je2ryw/render.git
     cd render
-    
+
     make init
     make all
+
+Once a real `v0.3.0` tag exists on the `je2ryw/crypt` fork, the relative replacement can be switched to the fork version described by design decision D2:
+
+    replace github.com/VirtusLab/crypt => github.com/je2ryw/crypt v0.3.0
 
 ## The name
 
