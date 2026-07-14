@@ -4,7 +4,8 @@ PKG=github.com/VirtusLab/render
 
 # Set POSIX sh for maximum interoperability
 SHELL := /bin/sh
-PATH  := $(GOPATH)/bin:$(PATH)
+GOBIN ?= $(shell go env GOPATH)/bin
+PATH  := $(GOBIN):$(PATH)
 
 # Set an output prefix, which is the local directory if not specified
 PREFIX?=$(shell pwd)
@@ -24,7 +25,7 @@ BUILDDIR := ${PREFIX}/cross
 VERSION := $(shell cat VERSION.txt)
 GITCOMMIT := $(shell git rev-parse --short HEAD)
 GITUNTRACKEDCHANGES := $(shell git status --porcelain --untracked-files=no)
-GITIGNOREDBUTTRACKEDCHANGES := $(shell git ls-files -i --exclude-standard)
+GITIGNOREDBUTTRACKEDCHANGES := $(shell git ls-files -ci --exclude-standard)
 ifneq ($(GITUNTRACKEDCHANGES),)
     GITCOMMIT := $(GITCOMMIT)-dirty
 endif
@@ -52,10 +53,10 @@ all: clean verify build install ## Test, build, install
 .PHONY: init
 init: ## Initializes go tools this Makefile uses: golint, staticcheck, goimports, checkmake
 	@echo "+ $@"
-	go get -u golang.org/x/lint/golint
-	go get -u honnef.co/go/tools/cmd/staticcheck
-	go get -u golang.org/x/tools/cmd/goimports
-	go get -u github.com/mrtazz/checkmake
+	go install golang.org/x/lint/golint@latest
+	go install honnef.co/go/tools/cmd/staticcheck@latest
+	go install golang.org/x/tools/cmd/goimports@latest
+	go install github.com/mrtazz/checkmake@latest
 	@echo "Initialized tools"
 
 .PHONY: build
