@@ -1,0 +1,47 @@
+version: 2
+
+project_name: render
+
+builds:
+  - id: render
+    main: .
+    binary: render
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - >-
+        -w
+        -X github.com/VirtusLab/render/version.VERSION=v{{ .Version }}
+        -X github.com/VirtusLab/render/version.GITCOMMIT={{ .ShortCommit }}
+    goos:
+      - darwin
+      - freebsd
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+      - "386"
+      - arm
+    ignore:
+      - goos: darwin
+        goarch: "386"
+      - goos: darwin
+        goarch: arm
+
+archives:
+  - formats:
+      - binary
+    name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  use: git
+
+release:
+  draft: false

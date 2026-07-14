@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # Flip to master after merge, or remove with the sibling checkout after switching to a fork tag per design D2.
+  CRYPT_REF: feature/go126-oci-kms
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout render
+        uses: actions/checkout@v6
+        with:
+          path: render
+      - name: Checkout crypt
+        uses: actions/checkout@v6
+        with:
+          repository: je2ryw/crypt
+          ref: ${{ env.CRYPT_REF }}
+          path: crypt
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.26.x
+          cache: true
+          cache-dependency-path: render/go.sum
+      - name: Build
+        working-directory: render
+        run: go build ./...
+      - name: Vet
+        working-directory: render
+        run: go vet ./...
+      - name: Test
+        working-directory: render
+        run: go test ./...
+      - name: Check formatting
+        working-directory: render
+        shell: bash
+        run: |
+          unformatted=$(gofmt -l .)
+          if [[ -n "$unformatted" ]]; then
+            echo "$unformatted"
+            exit 1
+          fi
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout render
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          path: render
+      - name: Checkout crypt
+        uses: actions/checkout@v6
+        with:
+          repository: je2ryw/crypt
+          ref: ${{ env.CRYPT_REF }}
+          path: crypt
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.26.x
+          cache: true
+          cache-dependency-path: render/go.sum
+      - name: Verify tag matches VERSION.txt
+        if: github.event_name == 'push'
+        working-directory: render
+        shell: bash
+        run: |
+          version=$(cat VERSION.txt)
+          if [[ "$version" != "$GITHUB_REF_NAME" ]]; then
+            echo "::error::VERSION.txt ($version) does not match release tag ($GITHUB_REF_NAME)"
+            exit 1
+          fi
+      - name: Publish release
+        if: github.event_name == 'push'
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
+          workdir: render
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build snapshot
+        if: github.event_name == 'workflow_dispatch'
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --snapshot --clean
+          workdir: render
+      - name: Upload snapshot artifacts
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: render-snapshot-${{ github.sha }}
+          path: render/dist/*
+          if-no-files-found: error

@@ -23,6 +23,7 @@ profile.out
 # Temporary Files and Dependencies
 tmp
 cross
+dist/
 examples/directory-test/**/*.yaml
 
 # go-fuzz
