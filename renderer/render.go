@@ -221,7 +221,7 @@ func (r *renderer) Clone(configurators ...func(*config.Config)) Renderer {
 }
 
 func (r *renderer) String() string {
-	return fmt.Sprintf("%+v", r.Renderer.Configuration())
+	return fmt.Sprintf("%+v", r.Configuration())
 }
 
 // ExtraFunctions provides additional template functions
