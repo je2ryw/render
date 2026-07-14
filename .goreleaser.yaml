@@ -28,6 +28,10 @@ builds:
         goarch: "386"
       - goos: darwin
         goarch: arm
+      # windows/arm dropped — unsupported by the pinned go1.26.5 toolchain (`go tool dist list` does not include it);
+      # Makefile GOOSARCHES left untouched per D-R1, so `make cross` will still attempt and fail on this target until a future Makefile update.
+      - goos: windows
+        goarch: arm
 
 archives:
   - formats:
