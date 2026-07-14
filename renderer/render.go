@@ -10,12 +10,12 @@ import (
 
 	"github.com/VirtusLab/render/renderer/parameters"
 
+	"dario.cat/mergo"
 	"github.com/Masterminds/sprig/v3"
 	crypto "github.com/VirtusLab/crypt/crypto/render"
 	"github.com/VirtusLab/go-extended/pkg/files"
 	base "github.com/VirtusLab/go-extended/pkg/renderer"
 	"github.com/VirtusLab/go-extended/pkg/renderer/config"
-	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )

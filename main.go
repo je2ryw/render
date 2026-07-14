@@ -12,7 +12,7 @@ import (
 	"github.com/VirtusLab/go-extended/pkg/files"
 	"github.com/VirtusLab/go-extended/pkg/renderer/config"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/urfave/cli.v1"
+	"github.com/urfave/cli"
 )
 
 var (

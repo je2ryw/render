@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"compress/gzip"
 	"io"
-	"io/ioutil"
 	"math/big"
 	"net"
 	"os"
@@ -97,7 +96,7 @@ func (r *renderer) ReadFile(file string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	bs, err := ioutil.ReadFile(absPath)
+	bs, err := os.ReadFile(absPath)
 	if err != nil {
 		return "", err
 	}
@@ -122,7 +121,7 @@ func (r *renderer) WriteFile(file string, content string) (string, error) {
 	if err != nil {
 		return file, err
 	}
-	return file, ioutil.WriteFile(absPath, []byte(content), 0644)
+	return file, os.WriteFile(absPath, []byte(content), 0644)
 }
 
 // ToYAML is a template function, it turns a marshallable structure into a YAML fragment

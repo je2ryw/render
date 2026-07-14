@@ -14,11 +14,10 @@ See renderer.ExtraFunctions for our custom functions.
 
 Detailed documentation on the syntax and available functions can be found here:
 
-  * https://golang.org/pkg/text/template
-  * http://masterminds.github.io/sprig
-  * https://godoc.org/github.com/VirtusLab/render/renderer#ExtraFunctions
-  * https://godoc.org/github.com/VirtusLab/render/renderer#Renderer.NestedRender
-  * https://godoc.org/github.com/VirtusLab/render/renderer#Renderer.ReadFile
-
+  - https://golang.org/pkg/text/template
+  - http://masterminds.github.io/sprig
+  - https://godoc.org/github.com/VirtusLab/render/renderer#ExtraFunctions
+  - https://godoc.org/github.com/VirtusLab/render/renderer#Renderer.NestedRender
+  - https://godoc.org/github.com/VirtusLab/render/renderer#Renderer.ReadFile
 */
 package renderer

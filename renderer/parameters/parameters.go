@@ -1,17 +1,17 @@
 package parameters
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"strings"
 
 	"github.com/VirtusLab/go-extended/pkg/files"
 	"github.com/VirtusLab/go-extended/pkg/matcher"
 
-	"github.com/ghodss/yaml"
-	"github.com/imdario/mergo"
+	"dario.cat/mergo"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"sigs.k8s.io/yaml"
 )
 
 const (
@@ -90,7 +90,7 @@ func FromFiles(configPaths []string) (Parameters, error) {
 			logrus.Errorf("Can't find the configuration file '%s': %v", configPath, err)
 			return nil, errors.WithStack(err)
 		}
-		b, err := ioutil.ReadFile(configPath)
+		b, err := os.ReadFile(configPath)
 		if err != nil {
 			logrus.Errorf("Can't open the configuration file '%s': %v", configPath, err)
 			return nil, errors.WithStack(err)
