@@ -7,17 +7,32 @@ on:
       - master
       - main
   pull_request:
+
+env:
+  # Flip to master after merge, or remove with the sibling checkout after switching to a fork tag per design D2.
+  CRYPT_REF: feature/go126-oci-kms
+
 jobs:
   golangci:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout render
+        uses: actions/checkout@v6
+        with:
+          path: render
+      - name: Checkout crypt
+        uses: actions/checkout@v6
+        with:
+          repository: je2ryw/crypt
+          ref: ${{ env.CRYPT_REF }}
+          path: crypt
       - uses: actions/setup-go@v6
         with:
           go-version: '1.26.x'
-          cache-dependency-path: go.sum
+          cache-dependency-path: render/go.sum
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
           version: v2.12.2
+          working-directory: render
