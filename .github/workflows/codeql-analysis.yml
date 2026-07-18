@@ -14,8 +14,8 @@ permissions:
   security-events: write
 
 env:
-  # Flip to master after merge, or remove with the sibling checkout after switching to a fork tag per design D2.
-  CRYPT_REF: feature/go126-oci-kms
+  # Keep the sibling checkout aligned with the released crypt dependency in go.mod.
+  CRYPT_REF: v0.3.0
 
 jobs:
   analyze:
