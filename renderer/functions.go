@@ -169,15 +169,14 @@ func Gzip(input interface{}) (string, error) {
 
 	var b bytes.Buffer
 	w := gzip.NewWriter(&b)
-	defer func() { _ = w.Close() }()
 
 	_, err = w.Write(inputAsBytes)
 	if err != nil {
+		_ = w.Close()
 		return "", err
 	}
 
-	err = w.Flush()
-	if err != nil {
+	if err = w.Close(); err != nil {
 		return "", err
 	}
 
